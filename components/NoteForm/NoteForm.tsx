@@ -4,6 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 import { createNote } from '@/lib/api';
+import { useNoteStore } from '@/lib/store/noteStore';
 import type { NewNote } from '@/types/note';
 
 import css from './NoteForm.module.css';
@@ -12,9 +13,15 @@ export default function NoteForm() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
+  const draft = useNoteStore((state) => state.draft);
+  const setDraft = useNoteStore((state) => state.setDraft);
+  const clearDraft = useNoteStore((state) => state.clearDraft);
+
   const createMutation = useMutation({
     mutationFn: createNote,
     onSuccess: () => {
+      clearDraft();
+
       queryClient.invalidateQueries({
         queryKey: ['notes'],
       });
@@ -47,6 +54,13 @@ export default function NoteForm() {
           type="text"
           name="title"
           className={css.input}
+          value={draft.title}
+          onChange={(event) =>
+            setDraft({
+              ...draft,
+              title: event.target.value,
+            })
+          }
           minLength={3}
           maxLength={50}
           required
@@ -61,6 +75,13 @@ export default function NoteForm() {
           name="content"
           rows={8}
           className={css.textarea}
+          value={draft.content}
+          onChange={(event) =>
+            setDraft({
+              ...draft,
+              content: event.target.value,
+            })
+          }
           maxLength={500}
           required
         />
@@ -69,7 +90,18 @@ export default function NoteForm() {
       <div className={css.formGroup}>
         <label htmlFor="tag">Tag</label>
 
-        <select id="tag" name="tag" className={css.select} defaultValue="Todo">
+        <select
+          id="tag"
+          name="tag"
+          className={css.select}
+          value={draft.tag}
+          onChange={(event) =>
+            setDraft({
+              ...draft,
+              tag: event.target.value as NewNote['tag'],
+            })
+          }
+        >
           <option value="Todo">Todo</option>
           <option value="Work">Work</option>
           <option value="Personal">Personal</option>
