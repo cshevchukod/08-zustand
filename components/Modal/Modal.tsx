@@ -22,15 +22,16 @@ export default function Modal({ children, onClose }: Props) {
   return (
     <div className={css.backdrop}>
       <div className={css.modal}>
-        <button
-          className={css.closeButton}
-          type="button"
-          onClick={handleClose}
-        >
-          Close
-        </button>
-
         {children}
+        {!onClose && (
+          <button
+            className={css.closeButton}
+            type="button"
+            onClick={handleClose}
+          >
+            Close
+          </button>
+        )}
       </div>
     </div>
   );
