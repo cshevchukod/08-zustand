@@ -1,5 +1,10 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+
+import Header from '@/components/Header/Header';
+import Footer from '@/components/Footer/Footer';
+import TanStackProvider from '@/components/TanStackProvider/TanStackProvider';
+
 import './globals.css';
 
 const roboto = Roboto({
@@ -27,14 +32,22 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
+type RootLayoutProps = {
   children: React.ReactNode;
-}>) {
+  modal: React.ReactNode;
+};
+
+export default function RootLayout({ children, modal }: RootLayoutProps) {
   return (
     <html lang="en">
-      <body className={roboto.variable}>{children}</body>
+      <body className={roboto.variable}>
+        <TanStackProvider>
+          <Header />
+          {children}
+          {modal}
+          <Footer />
+        </TanStackProvider>
+      </body>
     </html>
   );
 }
