@@ -69,7 +69,7 @@ export default function NotesClient({ tag }: Props) {
         <SearchBox value={inputValue} onChange={handleChange} />
 
         <Link href="/notes/action/create" className={css.button}>
-          Create note
+          Create note +
         </Link>
       </header>
 
